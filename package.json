@@ -1,0 +1,12 @@
+{
+  "name": "mattermost-interactive-post-api",
+  "main": "server.js",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "~4.16.2",
+    "mongoose": "~4.13.9",
+    "body-parser": "~1.18.2",
+    "morgan": "~1.9.0",
+    "crypto-random-string": "~1.0.0"
+  }
+}
