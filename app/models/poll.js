@@ -1,3 +1,4 @@
+"use strict";
 // app/models/poll.js
 var mongoose     = require('mongoose');
 var Schema       = mongoose.Schema;

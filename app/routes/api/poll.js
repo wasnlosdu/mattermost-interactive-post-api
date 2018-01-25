@@ -92,8 +92,51 @@ router.post("/vote", function (req, res, next) {
 
 router.post("/end-poll", function (req, res, next) {
     var _PollId = req.body.context.poll_id;
-    Poll.distinct("Vote", {PollId: _PollId}).then(function (Votes) {
-        console.log(Votes);
+    var _VoteTotal = 0;
+    var _Response = {
+        "update": {
+            "props": {
+                "attachments": [{
+                    "text": req.body.context.prompt,
+                    "fields": []
+                }]
+            }
+        }
+    };
+    Poll.find()
+        .where("PollId", _PollId)
+        .count()
+        .then(function (total) {
+            _VoteTotal = total;
+            console.log(total);
+        }).catch(next);
+
+    Poll.aggregate([
+        {
+            "$match": {
+                "PollId": _PollId
+            }
+        },
+        {
+            "$group": {
+                "_id": "$Vote",
+                "count": {
+                    "$sum": 1
+                }
+            }
+        }
+    ], function (err, result) {
+        if (err) {
+            return res.json(err);
+        }
+        result.forEach(function (vote) {
+            _Response.update.props.attachments[0].fields.push({
+                "short": true,
+                "title": vote._id,
+                "value": Math.round(+vote.count / +_VoteTotal * 100) + "%"
+            });
+        });
+        res.json(_Response);
     });
 });
 
