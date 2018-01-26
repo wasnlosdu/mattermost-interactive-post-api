@@ -24,7 +24,7 @@ router.post("/init", function (req, res, next) {
 
     var pollId = cryptoRandomString(32);
     var prompt = req.body.text;
-    var schema = req.headers["x-forwarded-proto"];
+    var schema = req.protocol;
     var apiUrl = schema + "://" + req.headers.host + req.baseUrl;
 
     res.json({
