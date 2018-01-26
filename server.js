@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 
 // DATABASE SETUP
 var dbname = "mip-db";
-var uri = "mongodb://localhost/" + dbname;
+var uri = process.env.MONGODB_URI || "mongodb://localhost/" + dbname;
 var options = {
     autoIndex: false, // Don't build indexes
     reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
@@ -25,10 +25,9 @@ var options = {
     // If not connected, return errors immediately rather than waiting for reconnect
     bufferMaxEntries: 0
 };
-if (isProduction) {
-    mongoose.connect(process.env.MONGODB_URI, options);
-} else {
-    mongoose.connect(uri, options);
+
+mongoose.connect(uri, options);
+if (!isProduction) {
     mongoose.set("debug", true);
 }
 
